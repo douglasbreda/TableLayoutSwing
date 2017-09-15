@@ -4,6 +4,7 @@ package layout;
 
 import java.awt.*;
 import java.util.*;
+import support.ArrayStruct;
 
 
 
@@ -134,7 +135,7 @@ protected int oldWidth;
 /** Previous known height of the container */
 protected int oldHeight;
 
-
+private ArrayList<Hashtable<ArrayStruct, Color>> colorList = null; 
 
 //******************************************************************************
 //** Constructors                                                            ***
@@ -211,6 +212,9 @@ public TableLayout (double size[][])
     // Create an empty list of components
     list = new LinkedList();
 
+    //Create a new instance of color list
+    colorList = new ArrayList<Hashtable<ArrayStruct, Color>>();
+    
     // Indicate that the cell sizes are not known
     dirty = true;
 }
@@ -882,7 +886,11 @@ public void drawGrid (Container container, Graphics g)
         for (int column = 0; column < columnSize.length; column++)
         {
             // Use a random color to make things easy to see
+            
             Color color = new Color((int) (Math.random() * 0xFFFFFFL));
+            
+            color = addColorList(row, column, color);
+            
             g.setColor (color);
             
             // Draw the cell as a solid rectangle
@@ -898,6 +906,36 @@ public void drawGrid (Container container, Graphics g)
     }
 }
 
+//Add a color into a list
+private Color addColorList(int row, int column, Color color){
+    
+    if (!checkColumnAlreadyInformed(row, column)) {
+        ArrayStruct arrayStruct = new ArrayStruct(row, column);
+        Hashtable hashObjects = new Hashtable<>();
+        hashObjects.put(arrayStruct, color);
+        colorList.add(hashObjects);
+
+        return color;
+    } else {
+        return colorList.stream()
+                .filter(x -> x.keys().nextElement().getRow() == row
+                && x.keys().nextElement().getColumn() == column)
+                .findAny()
+                .get()
+                .values()
+                .stream()
+                .findFirst()
+                .get();
+    }
+}
+
+//Check if the row and column already exists in the color array
+private boolean checkColumnAlreadyInformed(int row, int column){
+    return colorList.stream()
+            .filter(x -> x.keys().nextElement().getRow() == row 
+                    && x.keys().nextElement().getColumn() == column)
+            .count() > 0;
+}
 public void agentsHere(ArrayList<Point> points){
     int x = 0;
     int y = 0;
@@ -2155,7 +2193,4 @@ public void invalidateLayout (Container target)
             return equal;
         }
     }
-
-
-
 }
