@@ -4,6 +4,7 @@ package layout;
 
 import java.awt.*;
 import java.util.*;
+import java.util.stream.Collectors;
 import support.ArrayStruct;
 
 
@@ -941,15 +942,7 @@ private Color addColorList(int row, int column, Color color){
 
         return color;
     } else {
-        return colorList.stream()
-                .filter(x -> x.keys().nextElement().getRow() == row
-                && x.keys().nextElement().getColumn() == column)
-                .findAny()
-                .get()
-                .values()
-                .stream()
-                .findFirst()
-                .get();
+        return this.getColor(row, column);
     }
 }
 
@@ -964,6 +957,41 @@ private boolean checkColumnAlreadyInformed(int row, int column){
             .filter(x -> x.keys().nextElement().getRow() == row 
                     && x.keys().nextElement().getColumn() == column)
             .count() > 0;
+}
+
+/**
+ * Return the color of a row and column
+ * @param row Row searched
+ * @param column Column searched
+ * @return 
+ */
+public Color getColor(int row, int column){
+    return colorList.stream()
+                .filter(x -> x.keys().nextElement().getRow() == row
+                && x.keys().nextElement().getColumn() == column)
+                .findAny()
+                .get()
+                .values()
+                .stream()
+                .findFirst()
+                .get();
+}
+
+/**
+ * Updates the color from a row and column
+ * @param row Row to be updated
+ * @param column Column to be updated
+ * @param color New color
+ */
+public void setColor(int row, int column, Color color){
+    if(checkColumnAlreadyInformed(row, column)){
+        colorList.stream()
+                 .filter(x -> x.keys().nextElement().getRow() == row
+                         && x.keys().nextElement().getColumn() == column)
+                 .forEach(x -> {
+                     x.put(x.keys().nextElement(), color);
+                 });
+    }
 }
 
 /**
