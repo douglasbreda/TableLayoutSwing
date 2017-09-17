@@ -141,7 +141,7 @@ private ArrayList<Hashtable<ArrayStruct, Color>> colorList = null;
 //** Constructors                                                            ***
 //******************************************************************************
 
-
+   
 
 /**
  * Constructs an instance of TableLayout.  This TableLayout will have one row
@@ -254,7 +254,14 @@ public TableLayoutConstraints getConstraints (Component component)
     return null;
 }
 
-
+//Show de color for each item from table
+public void showColors(){
+    for (Hashtable<ArrayStruct, Color> color : colorList) {
+        System.out.println("Cor: " + color.values().stream().findFirst().get() + "\n" + 
+                           "Linha: " + color.keys().nextElement().getRow() + "\n" + 
+                           "Coluna: " + color.keys().nextElement().getColumn() + "\n");
+    }
+}    
 
 /**
  * Sets the constraints of a given component.
@@ -894,8 +901,8 @@ public void drawGrid (Container container, Graphics g)
             g.setColor (color);
             
             // Draw the cell as a solid rectangle
-//            g.fillRect (x, y, columnSize[column], rowSize[row]);
-            g.drawRect(x, y, columnSize[column], rowSize[row]);
+            g.fillRect (x, y, columnSize[column], rowSize[row]);
+//            g.drawRect(x, y, columnSize[column], rowSize[row]);
 
             // Increment x
             x += columnSize[column];
