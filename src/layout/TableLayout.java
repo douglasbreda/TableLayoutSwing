@@ -4,7 +4,6 @@ package layout;
 
 import java.awt.*;
 import java.util.*;
-import java.util.stream.Collectors;
 import support.ArrayStruct;
 
 
@@ -267,7 +266,7 @@ public TableLayoutConstraints getConstraints (Component component)
  */
 public void showColors(){
     for (Hashtable<ArrayStruct, Color> color : colorList) {
-        System.out.println("Color: " + color.values().stream().findFirst().get() + "\n" + 
+        setLog("Color: " + color.values().stream().findFirst().get() + "\n" + 
                            "Row: " + color.keys().nextElement().getRow() + "\n" + 
                            "Column: " + color.keys().nextElement().getColumn() + "\n");
     }
@@ -298,7 +297,7 @@ public int getMaxBorderX(int row, int column) {
                 for (int columnArray = 0; columnArray < columnSize.length; columnArray++) {
                     if (columnArray == column) {
                         x += columnSize[columnArray + 1];
-                        System.out.println("Máx X: " + x);
+                        setLog("Máx X: " + x);
                         return x;
                     }
                     // Increment x
@@ -309,7 +308,7 @@ public int getMaxBorderX(int row, int column) {
 //                y += rowSize[rowArray];
             }
         }
-        System.out.println("Máx X: " + x);
+        setLog("Máx X: " + x);
         return x;
     }
 
@@ -327,7 +326,7 @@ public int getMaxBorderX(int row, int column) {
                 for (int columnArray = 0; columnArray < columnSize.length; columnArray++) {
                     if (columnArray == column) {
                         y += rowSize[rowArray + 1];
-                        System.out.println("Máx Y: " + y);
+                        setLog("Máx Y: " + y);
                         return y;
                     }
                 }
@@ -336,8 +335,12 @@ public int getMaxBorderX(int row, int column) {
                 y += rowSize[rowArray];
             }
         }
-        System.out.println("Máx X: " + y);
+        this.setLog("Máx X: " + y);
         return y;
+    }
+    
+    private void setLog(String message){
+        System.out.println(message);
     }
 
 
@@ -1078,7 +1081,7 @@ public void objectsHere(ArrayList<Point> points){
             for (Point point : points) {
                 if(point.x >= x && point.x < (x + columnSize[column] ) &&
                     point.y >= y && point.y <= (y + rowSize[row]))
-                    System.out.println("Row: " + row + " Column: " + column);
+                    setLog("Row: " + row + " Column: " + column);
             }
             // Increment x
             x += columnSize[column];
@@ -1124,7 +1127,7 @@ public int objectsInRowColumn(int row, int column, String objectName){
         }
     }
     
-    System.out.println("There are " + objects + " " + objectName + " here.");
+    setLog("There are " + objects + " " + objectName + " here.");
     
     return objects;
 }
