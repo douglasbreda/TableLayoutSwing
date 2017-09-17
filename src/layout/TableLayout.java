@@ -3,6 +3,7 @@ package layout;
 
 
 import java.awt.*;
+import java.awt.geom.Point2D;
 import java.util.*;
 import support.ArrayStruct;
 
@@ -139,7 +140,7 @@ protected int oldHeight;
 private ArrayList<Hashtable<ArrayStruct, Color>> colorList = null; 
 
 //** list de positions of the objects that are in each position **/
-private ArrayList<Point> points = null;
+private ArrayList<Point2D> points = null;
 
 
 //******************************************************************************
@@ -220,7 +221,7 @@ public TableLayout (double size[][])
     //Create a new instance of color list
     colorList = new ArrayList<Hashtable<ArrayStruct, Color>>();
     
-    points = new ArrayList<Point>();
+    points = new ArrayList<Point2D>();
     
     // Indicate that the cell sizes are not known
     dirty = true;
@@ -276,7 +277,7 @@ public void showColors(){
  * //Update the points array 
  * @param points point where the objects are drawed
  */
-public void updatePoints(ArrayList<Point> points){
+public void updatePoints(ArrayList<Point2D> points){
     this.points = points;
 }
 
@@ -1067,7 +1068,7 @@ public void setColor(int row, int column, Color color){
  * Find the objects inside each row/column
  * @param points 
  */
-public void objectsHere(ArrayList<Point> points){
+public void objectsHere(ArrayList<Point2D> points){
     int x = 0;
     int y = 0;
     
@@ -1078,9 +1079,9 @@ public void objectsHere(ArrayList<Point> points){
 
         for (int column = 0; column < columnSize.length; column++)
         {
-            for (Point point : points) {
-                if(point.x >= x && point.x < (x + columnSize[column] ) &&
-                    point.y >= y && point.y <= (y + rowSize[row]))
+            for (Point2D point : points) {
+                if(point.getX() >= x && point.getX() < (x + columnSize[column] ) &&
+                    point.getY() >= y && point.getY() <= (y + rowSize[row]))
                     setLog("Row: " + row + " Column: " + column);
             }
             // Increment x
@@ -1111,9 +1112,9 @@ public int objectsInRowColumn(int row, int column, String objectName){
         if (rowArray == row) {
             for (int columnArray = 0; columnArray < columnSize.length; columnArray++) {
                 if (columnArray == column) {
-                    for (Point point : points) {
-                        if (point.x >= x && point.x < (x + columnSize[columnArray])
-                                && point.y >= y && point.y <= (y + rowSize[rowArray])) {
+                    for (Point2D point : points) {
+                        if (point.getX() >= x && point.getX() < (x + columnSize[columnArray])
+                                && point.getY() >= y && point.getY() <= (y + rowSize[rowArray])) {
                             objects++;
                         }
                     }
