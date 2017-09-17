@@ -262,7 +262,9 @@ public TableLayoutConstraints getConstraints (Component component)
     return null;
 }
 
-//Show de color for each item from table
+/**
+ * Show de color for each item from table
+ */
 public void showColors(){
     for (Hashtable<ArrayStruct, Color> color : colorList) {
         System.out.println("Color: " + color.values().stream().findFirst().get() + "\n" + 
@@ -271,10 +273,74 @@ public void showColors(){
     }
 }
 
-//Update the points array 
+/**
+ * //Update the points array 
+ * @param points point where the objects are drawed
+ */
 public void updatePoints(ArrayList<Point> points){
     this.points = points;
 }
+
+/**
+ * Return the border limit
+ * @param row 
+ * @param column
+ * @return 
+ */
+public int getMaxBorderX(int row, int column) {
+        int x = 0;
+
+        for (int rowArray = 0; rowArray < rowSize.length; rowArray++) {
+            // Initialize x
+            x = 0;
+
+            if (rowArray == row) {
+                for (int columnArray = 0; columnArray < columnSize.length; columnArray++) {
+                    if (columnArray == column) {
+                        x += columnSize[columnArray + 1];
+                        System.out.println("Máx X: " + x);
+                        return x;
+                    }
+                    // Increment x
+                    x += columnSize[columnArray];
+                }
+
+                // Increment y
+//                y += rowSize[rowArray];
+            }
+        }
+        System.out.println("Máx X: " + x);
+        return x;
+    }
+
+/**
+ * Return the limits of y border
+ * @param row
+ * @param column
+ * @return 
+ */
+    public int getMaxBorderY(int row, int column) {
+        int y = 0;
+
+        for (int rowArray = 0; rowArray < rowSize.length; rowArray++) {
+            if (rowArray == row) {
+                for (int columnArray = 0; columnArray < columnSize.length; columnArray++) {
+                    if (columnArray == column) {
+                        y += rowSize[rowArray + 1];
+                        System.out.println("Máx Y: " + y);
+                        return y;
+                    }
+                }
+
+                // Increment y
+                y += rowSize[rowArray];
+            }
+        }
+        System.out.println("Máx X: " + y);
+        return y;
+    }
+
+
 /**
  * Sets the constraints of a given component.
  *
