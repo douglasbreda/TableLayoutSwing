@@ -135,7 +135,12 @@ protected int oldWidth;
 /** Previous known height of the container */
 protected int oldHeight;
 
+/** list of colors of each row and column of the table **/
 private ArrayList<Hashtable<ArrayStruct, Color>> colorList = null; 
+
+//** list de positions of the objects that are in each position **/
+private ArrayList<Point> points = null;
+
 
 //******************************************************************************
 //** Constructors                                                            ***
@@ -215,6 +220,8 @@ public TableLayout (double size[][])
     //Create a new instance of color list
     colorList = new ArrayList<Hashtable<ArrayStruct, Color>>();
     
+    points = new ArrayList<Point>();
+    
     // Indicate that the cell sizes are not known
     dirty = true;
 }
@@ -257,12 +264,16 @@ public TableLayoutConstraints getConstraints (Component component)
 //Show de color for each item from table
 public void showColors(){
     for (Hashtable<ArrayStruct, Color> color : colorList) {
-        System.out.println("Cor: " + color.values().stream().findFirst().get() + "\n" + 
-                           "Linha: " + color.keys().nextElement().getRow() + "\n" + 
-                           "Coluna: " + color.keys().nextElement().getColumn() + "\n");
+        System.out.println("Color: " + color.values().stream().findFirst().get() + "\n" + 
+                           "Row: " + color.keys().nextElement().getRow() + "\n" + 
+                           "Column: " + color.keys().nextElement().getColumn() + "\n");
     }
-}    
+}
 
+//Update the points array 
+public void updatePoints(ArrayList<Point> points){
+    this.points = points;
+}
 /**
  * Sets the constraints of a given component.
  *
@@ -913,7 +924,13 @@ public void drawGrid (Container container, Graphics g)
     }
 }
 
-//Add a color into a list
+/**
+ * Add a color into a list
+ * @param row row to add the color
+ * @param column column to add the color
+ * @param color wich color you will add
+ * @return 
+ */
 private Color addColorList(int row, int column, Color color){
     
     if (!checkColumnAlreadyInformed(row, column)) {
@@ -936,14 +953,24 @@ private Color addColorList(int row, int column, Color color){
     }
 }
 
-//Check if the row and column already exists in the color array
+/**
+ * Check if the row and column already exists in the color array
+ * @param row
+ * @param column
+ * @return 
+ */
 private boolean checkColumnAlreadyInformed(int row, int column){
     return colorList.stream()
             .filter(x -> x.keys().nextElement().getRow() == row 
                     && x.keys().nextElement().getColumn() == column)
             .count() > 0;
 }
-public void agentsHere(ArrayList<Point> points){
+
+/**
+ * Find the objects inside each row/column
+ * @param points 
+ */
+public void objectsHere(ArrayList<Point> points){
     int x = 0;
     int y = 0;
     
@@ -957,7 +984,7 @@ public void agentsHere(ArrayList<Point> points){
             for (Point point : points) {
                 if(point.x >= x && point.x < (x + columnSize[column] ) &&
                     point.y >= y && point.y <= (y + rowSize[row]))
-                    System.out.println("Linha: " + row + " Coluna: " + column);
+                    System.out.println("Row: " + row + " Column: " + column);
             }
             // Increment x
             x += columnSize[column];
@@ -968,6 +995,45 @@ public void agentsHere(ArrayList<Point> points){
     }
 }
 
+/**
+ * Return the number of objects inside a row and coluna
+ * @param row
+ * @param column
+ * @param objectName Defines de name of the object to show in the message
+ */
+public int objectsInRowColumn(int row, int column, String objectName){
+    int objects = 0;
+    
+    int x = 0;
+    int y = 0;
+    
+    for (int rowArray = 0; rowArray < rowSize.length; rowArray++) {
+        // Initialize x
+        x = 0;
+
+        if (rowArray == row) {
+            for (int columnArray = 0; columnArray < columnSize.length; columnArray++) {
+                if (columnArray == column) {
+                    for (Point point : points) {
+                        if (point.x >= x && point.x < (x + columnSize[columnArray])
+                                && point.y >= y && point.y <= (y + rowSize[rowArray])) {
+                            objects++;
+                        }
+                    }
+                }
+                // Increment x
+                x += columnSize[columnArray];
+            }
+
+            // Increment y
+            y += rowSize[rowArray];
+        }
+    }
+    
+    System.out.println("There are " + objects + " " + objectName + " here.");
+    
+    return objects;
+}
 
 
 /**
